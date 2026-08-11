@@ -142,7 +142,7 @@
         </tr>
         <tr>
           <td>Rollout scope</td>
-          <td>Resolved: starting with Abu Dhabi GP. See <a href="#schedule">Rollout Schedule</a> below.</td>
+          <td>Resolved: starting with RWC2027 and Wimbledon 2027. See <a href="#schedule">Rollout Schedule</a> below.</td>
         </tr>
         <tr>
           <td>Journey vs Sequence</td>
@@ -163,7 +163,7 @@
 
       <h3>Building blocks, in order</h3>
       <ul class="checklist">
-        <li><strong>Snapshot at Won</strong> — when an Enquiry is marked Won, tag the Contact into an event + window segment, e.g. <em>Booking Journey – Abu Dhabi GP – Medium</em>. This is what the Journey's entry condition reads.</li>
+        <li><strong>Snapshot at Won</strong> — when an Enquiry is marked Won, tag the Contact into an event + window segment, e.g. <em>Booking Journey – Wimbledon 2027 – Long</em>. This is what the Journey's entry condition reads.</li>
         <li><strong>Booking Date / Travel Date mirrored to Contact</strong> — still needed to anchor entry timing and calculate which window (Long/Medium/Short) the booking falls into, mirrored from the Enquiry, same pattern as the existing pipeline-stage sync.</li>
         <li><strong>Status re-check per step</strong> — the existing Lost Journey already re-checks its condition before every send, "is the lost reason still current", exiting if not. The Booking Journey can use the same pattern: re-check the Enquiry is still Won and not Cancelled immediately before each send. A full-group cancellation then naturally stops the series at the next step, without necessarily needing a separate real-time removal workflow. Worth testing whether that timing is tight enough, or whether an instant removal is still wanted on top.</li>
         <li><strong>Destination content, static per event</strong> — written directly into the templates, not synced as a field. Only works cleanly for Tier 1 evergreen events, see the Rollout Schedule below.</li>
@@ -185,12 +185,12 @@
       <p>Window classification (Long/Medium/Short) is based on time-to-travel, not time-since-booking, so it calculates the same way for an existing customer as a new one, that part isn't the problem. The real issue is where they'd join the series: entering a Journey that runs linearly from Mailer 1 would send someone who booked months ago a "Congratulations, you're officially booked!" open, months late and out of step with the relationship they already have with their consultant.</p>
       <p>Two options, worth a decision rather than assuming either:</p>
       <ul>
-        <li><strong>Exclude past bookings from the pilot</strong> — only Enquiries marked Won after the Journey goes live get tagged into the segment. Existing Abu Dhabi bookings stay untouched. Cleanest for a first pilot.</li>
-        <li><strong>One-time backfill</strong> — identify existing Won, not-cancelled Abu Dhabi bookings, calculate current time-to-travel, and enter each one at whichever mailer actually matches today, skipping earlier ones rather than starting at Mailer 1. More complete, but extra one-off work, and needs the Journey steps built so someone can join partway through.</li>
+        <li><strong>Exclude past bookings from the pilot</strong> — only Enquiries marked Won after the Journey goes live get tagged into the segment. Existing RWC2027/Wimbledon bookings stay untouched. Cleanest for a first pilot.</li>
+        <li><strong>One-time backfill</strong> — identify existing Won, not-cancelled RWC2027/Wimbledon bookings, calculate current time-to-travel, and enter each one at whichever mailer actually matches today, skipping earlier ones rather than starting at Mailer 1. More complete, but extra one-off work, and needs the Journey steps built so someone can join partway through.</li>
       </ul>
       <div class="callout open">
         <strong>Open product question, not yet decided</strong>
-        Which of the two above for the Abu Dhabi pilot, exclude past bookings or backfill them mid-series? Leaning toward excluding for a first pilot, keeping it simple, but this is a call for the team, not something to assume.
+        Which of the two above for the RWC2027/Wimbledon pilots, exclude past bookings or backfill them mid-series? Leaning toward excluding for a first pilot, keeping it simple, but this is a call for the team, not something to assume.
       </div>
 
       <div class="callout open">
@@ -202,42 +202,29 @@
 
     <section id="schedule">
       <h2><span class="num">05</span>Rollout Schedule</h2>
-      <p class="sub">Tier 1 evergreen events, ordered by date, from today (4 August 2026) using the Product Development Dates sheet</p>
+      <p class="sub">RWC2027 and Wimbledon 2027, both Long window (9–12 months out)</p>
 
       <div class="callout info">
-        <strong>Why Abu Dhabi GP works as the first demo</strong>
-        Abu Dhabi GP runs 3–6 December 2026 (per the official Ethara/abudhabigp.com listing, worth confirming against the 04–06 December on the Product Development Dates sheet). It's a well-known, high-profile Grand Prix on a fixed venue, evergreen content, low risk to get destination copy right, and its Medium-window timing today makes it a manageable first build to prove the segment and content approach on.
+        <strong>Why RWC2027 and Wimbledon</strong>
+        RWC2027 (Oct 2027, pool stage onward) and Wimbledon 2027 (28 Jun–11 Jul 2027) are the two pilots. Both are Long-window events with real package/tier structure to build against: RWC2027's three tiers by knockout stage, Wimbledon's round/court packages from First Round through the Final. See the RWC2027 Booking Journey Pilot and Wimbledon 2027 Booking Journey Pilot docs for the full build detail on each.
       </div>
 
-      <p style="font-size:13px; color:var(--grey);">Ordered by date and evergreen tier, not by booking volume, volume by event isn't something we have visibility on yet (Micro Marketing Planner / Fresh Tags would confirm that). Worth cross-checking this order against actual demand before committing beyond the pilot.</p>
-
       <table class="qa">
-        <tr><th>Event</th><th>Dates</th><th>Roughly how far out (from today)</th><th>Window if booked today</th></tr>
-        <tr><td>British MotoGP (Silverstone)</td><td>07–09 Aug 2026</td><td>~3 days</td><td>Short / departing</td></tr>
-        <tr><td>Dutch GP (Zandvoort)</td><td>21–23 Aug 2026</td><td>~2.5 weeks</td><td>Short</td></tr>
-        <tr><td>Aragon MotoGP</td><td>28–30 Aug 2026</td><td>~3.5 weeks</td><td>Short</td></tr>
-        <tr><td>Italy GP (Monza)</td><td>04–06 Sep 2026</td><td>~1 month</td><td>Short</td></tr>
-        <tr><td>San Marino MotoGP (Misano)</td><td>11–13 Sep 2026</td><td>~5.5 weeks</td><td>Short</td></tr>
-        <tr><td>Austrian MotoGP</td><td>18–20 Sep 2026</td><td>~6.5 weeks</td><td>Short / Medium border</td></tr>
-        <tr><td>Azerbaijan GP</td><td>24–26 Sep 2026</td><td>~7.5 weeks</td><td>Medium</td></tr>
-        <tr><td>Singapore GP</td><td>09–11 Oct 2026</td><td>~9.5 weeks</td><td>Medium</td></tr>
-        <tr><td>Brazil GP</td><td>06–08 Nov 2026</td><td>~13 weeks</td><td>Medium</td></tr>
-        <tr><td>Portuguese MotoGP</td><td>13–15 Nov 2026</td><td>~14 weeks</td><td>Medium</td></tr>
-        <tr><td>Valencia MotoGP</td><td>20–22 Nov 2026</td><td>~15 weeks</td><td>Medium</td></tr>
-        <tr><td>Qatar GP</td><td>27–29 Nov 2026</td><td>~16.5 weeks</td><td>Medium</td></tr>
-        <tr style="background:#eaf2fc;"><td><strong>Abu Dhabi GP</strong> — pilot</td><td><strong>3–6 Dec 2026</strong></td><td><strong>~17.5 weeks (~4 months)</strong></td><td><strong>Medium</strong></td></tr>
+        <tr><th>Event</th><th>Dates</th><th>Window</th><th>Detail</th></tr>
+        <tr style="background:#eaf2fc;"><td><strong>RWC2027</strong></td><td>Oct 2027 (pool stage onward)</td><td>Long, three package tiers</td><td>See RWC2027 Booking Journey Pilot doc</td></tr>
+        <tr style="background:#eaf2fc;"><td><strong>Wimbledon 2027</strong></td><td>28 Jun–11 Jul 2027</td><td>Long, eight-plus package tiers</td><td>See Wimbledon 2027 Booking Journey Pilot doc</td></tr>
       </table>
 
       <h3>Suggested phased rollout</h3>
       <ul>
-        <li><strong>Phase 1 · Pilot</strong> — Abu Dhabi GP, Medium window content only. Proves the segment/status-recheck logic and the destination content approach on one event before anything else touches it.</li>
-        <li><strong>Phase 2 · Expand within Medium/Short</strong> — once the pilot is stable, roll the same content structure out to the other Tier 1 Grand Prix and MotoGP rounds above.</li>
-        <li><strong>Phase 3 · Extend to the Long window</strong> — once Medium/Short content is proven, extend the same Journey approach to events that sell 9–12 months out (e.g. Australian Open, Wimbledon, French Open, and Grand Prix/MotoGP rounds early in the 2027 calendar). Sequenced last mainly so content and destination copy get proven on a smaller scale first, not because the mechanism is harder, since Journeys don't have a duration constraint to work around.</li>
+        <li><strong>Phase 1 · Pilot</strong> — RWC2027 and Wimbledon 2027, Long window content, built in parallel. Proves the segment/status-recheck logic and the destination + package-tier content approach across two genuinely different event shapes at once.</li>
+        <li><strong>Phase 2 · Expand within Long</strong> — once stable, roll the same content structure out to other Long-window events (e.g. Australian Open, French Open, and early-season Grand Prix/MotoGP rounds).</li>
+        <li><strong>Phase 3 · Extend to Medium/Short</strong> — once Long-window content is proven, extend the same Journey approach to events that sell 6 months or less out.</li>
       </ul>
 
       <div class="callout warn">
         <strong>Worth checking before locking this in</strong>
-        This list is Tier 1 evergreen events only, chosen for venue stability, not for how many people actually book them. If a lower-tiered or rotating-venue event (Tier 2, e.g. a Champions League Final) is actually a bigger revenue driver than several of these, that's a reason to slot it in earlier despite the extra content-maintenance overhead, worth a quick sense-check against real numbers.
+        Ordering by which events actually justify the build effort is worth doing against real numbers rather than assuming, the same reasoning that put RWC2027 on the list despite the added tier complexity, its enquiry pipeline made the extra build worth it.
       </div>
       <a class="backtop" href="#top">↑ Back to top</a>
     </section>
@@ -246,11 +233,10 @@
       <h2><span class="num">06</span>Suggested Next Steps</h2>
       <p class="sub">To work through together</p>
       <ul>
-        <li>Confirm the correct Abu Dhabi GP race weekend dates (3–6 Dec per the official site vs 04–06 Dec on the Product Development Dates sheet)</li>
         <li>Test the status re-check pattern for cancellation, confirm whether the per-step re-check is tight enough or an instant removal is also wanted</li>
         <li>Decide the repeat-traveller / parallel-journey open question above</li>
-        <li>Decide whether the Abu Dhabi pilot excludes past bookings or backfills them mid-series</li>
-        <li>Build the segment-tagging workflow at Won for the Abu Dhabi pilot</li>
+        <li>Decide whether the RWC2027/Wimbledon pilots exclude past bookings or backfill them mid-series</li>
+        <li>Build the segment-tagging workflow at Won for RWC2027 and Wimbledon</li>
         <li>Decide how infographics get handled, inline image versus hosted link, per mailer where one's genuinely wanted</li>
       </ul>
       <a class="backtop" href="#top">↑ Back to top</a>
